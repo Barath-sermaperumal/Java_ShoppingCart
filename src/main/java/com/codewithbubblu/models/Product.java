@@ -9,19 +9,15 @@ public class Product {
     private double price;
     private int id;
 
-    public double getPrice() {
-        return price;
-    }
-
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
-    private Category category;
+    private String category;
 
     public String getTitle() {
         return title;
@@ -45,6 +41,10 @@ public class Product {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     public void setPrice(double price) throws AppException {

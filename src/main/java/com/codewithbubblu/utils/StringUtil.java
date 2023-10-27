@@ -14,4 +14,7 @@ public class StringUtil {
     public static final String USERMENU = "1.Categories\n2.Products\n3.Cart\n4.Order\n5.Logout";
     public static final String WELCOME_TO_LOGINPAGE = "------Welcome to Shopping------";
     public static final String CATEGORIES = "------Categories Available------";
+    public static final String PRODUCTS = "------Products Available------";
+    public static final String ADD_TO_CART = "Enter product to AddToCart: ";
+    public static final String CART_SUCCESSFULL = "^^^^^^^Added to cart successfully!!!^^^^^^^";
 }
