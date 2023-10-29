@@ -18,23 +18,17 @@ public class FileUtil {
     }
 
     public static File getCategoriesFile(){
-        if(categoriesFile==null){
             categoriesFile=new File("src/main/java/com/codewithbubblu/assets/categories.csv");
-        }
         return categoriesFile;
     }
 
     public static File getProductsFile(){
-        if(productsFile==null){
             productsFile=new File("src/main/java/com/codewithbubblu/assets/products.csv");
-        }
         return productsFile;
     }
 
     public static File getCartsFile(){
-        if(cartFile==null){
             cartFile=new File("src/main/java/com/codewithbubblu/assets/carts.csv");
-        }
         return cartFile;
     }
 

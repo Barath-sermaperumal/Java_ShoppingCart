@@ -42,6 +42,7 @@ public class CartController implements ICartController {
                         String s=existingProduct.toString();
                         s=s.replaceAll("\\[", "");
                         s=s.replaceAll("\\]","");
+                        s=s.replaceAll("\\s", "");
                         System.out.println(s);
                         appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv",s);
                         System.out.println(existingProduct);
@@ -53,6 +54,7 @@ public class CartController implements ICartController {
                         String s=newProduct.toString();
                         s=s.replaceAll("\\[", "");
                         s=s.replaceAll("\\]","");
+                        s=s.replaceAll("\\s", "");
                         System.out.println(s);
                         appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv",s);
                         break;
@@ -64,6 +66,7 @@ public class CartController implements ICartController {
                     String s=newProduct.toString();
                     s=s.replaceAll("\\[", "");
                     s=s.replaceAll("\\]","");
+                    s=s.replaceAll("\\s", "");
                     System.out.println(s);
                     appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv",s);
                     System.out.println(pickProductArray(categoryChoice));
@@ -165,9 +168,11 @@ public class CartController implements ICartController {
         try{
             Scanner scanner=new Scanner(getCartsFile());
             while (scanner.hasNext()){
-                String value=scanner.next().trim();
+                String value=scanner.next();
                 String[] cartsArray=value.split(",");
-                System.out.println(cartsArray[2]+"x"+cartsArray[7]+"=>"+parseInt(cartsArray[4])*parseInt(cartsArray[7]));
+                if(parseInt(cartsArray[0])==loggedInUserId) {
+                    System.out.println(cartsArray[2] + "x" + cartsArray[7] + "=>" + parseInt(cartsArray[4]) * parseInt(cartsArray[7]));
+                }
             }
             println("1.checkOut");
             println("99.Back");

@@ -2,6 +2,7 @@ package com.codewithbubblu.controller;
 
 import com.codewithbubblu.controller.implementation.IAuthController;
 import com.codewithbubblu.controller.implementation.ICategoriesController;
+import com.codewithbubblu.utils.AppException;
 import com.codewithbubblu.utils.StringUtil;
 
 import java.util.Scanner;
@@ -12,9 +13,13 @@ import static com.codewithbubblu.utils.Utils.println;
 
 public class CategoriesController implements ICategoriesController {
     HomeController homeController;
+    ProductController productController;
+    CartController cartController;
 
     public CategoriesController(HomeController homeController){
         this.homeController=homeController;
+        productController=new ProductController(homeController);
+        cartController=new CartController(homeController);
     }
     @Override
     public void showCategories() {
@@ -31,7 +36,28 @@ public class CategoriesController implements ICategoriesController {
                 homeController.printMenu();
             }
             else{
-                System.out.println("Under Development");
+                if(categoryChoice==1){
+                    productController.showSelectedProducts(1);
+                } else if (categoryChoice==2) {
+                    productController.showSelectedProducts(2);
+                } else if (categoryChoice==3) {
+                    productController.showSelectedProducts(3);
+                } else if (categoryChoice==4) {
+                    productController.showSelectedProducts(4);
+                }
+                else {
+                    homeController.invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
+                }
+                println("99.Back");
+                int Choice=enterInt(StringUtil.ADD_TO_CART);
+                if(Choice==99){
+                    homeController.printMenu();
+                }
+                else{
+                    cartController.addToCart(Choice);
+                    println(StringUtil.CART_SUCCESSFULL);
+                    productController.showProducts();
+                }
             }
             scanner.close();
         }

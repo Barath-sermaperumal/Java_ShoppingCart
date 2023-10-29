@@ -76,7 +76,7 @@ public class HomeController implements IHomeController {
         }
     }
 
-    private void invalidChoice(AppException e) {
+    void invalidChoice(AppException e) {
         println(e.toString());
         printMenu();
     }
