@@ -39,4 +39,9 @@ public class CategoriesController implements ICategoriesController {
             System.out.println(e);
         }
     }
+
+    @Override
+    public void adminCategoryFunctions() {
+        println(StringUtil.ENTER_ADMIN_CATEGORIES_CHOICES);
+    }
 }

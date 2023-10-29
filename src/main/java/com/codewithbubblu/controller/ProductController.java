@@ -40,4 +40,7 @@ public class ProductController {
             System.out.println(e);
         }
     }
+
+    public void adminProductFunctions() {
+    }
 }

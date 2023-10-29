@@ -11,4 +11,7 @@ public class HomePage {
     public void printWelcome(){
         println(StringUtil.WELCOME_TO_LOGINPAGE);
     }
+    public void printAdminMenu() {
+        println(StringUtil.ADMINMENU);
+    }
 }

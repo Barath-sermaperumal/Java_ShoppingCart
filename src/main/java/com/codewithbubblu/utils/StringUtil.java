@@ -17,4 +17,8 @@ public class StringUtil {
     public static final String PRODUCTS = "------Products Available------";
     public static final String ADD_TO_CART = "Enter product to AddToCart: ";
     public static final String CART_SUCCESSFULL = "^^^^^^^Added to cart successfully!!!^^^^^^^";
+    public static final String ADMINMENU = "1.Categories\n2.Products\n3.Order\n4.Logout";
+    public static final String ENTER_ADMIN_CATEGORIES_CHOICES = "1.Add Categories\n2.Edit Categories\n3.Delete Categories";
+    public static final String ENTER_ADMIN_PRODUCTS_CHOICES = "1.Add Products\n2.Edit Products\n3.Delete Products";
+    public static final String ENTER_ADMIN_ORDERS_CHOICES = "1.View Orders\n2.Approve Orders";
 }

@@ -18,12 +18,14 @@ import static com.codewithbubblu.utils.AppInput.enterInt;
 import static com.codewithbubblu.utils.AppInput.enterString;
 import static com.codewithbubblu.utils.FileUtil.getCredentialFile;
 import static com.codewithbubblu.utils.Utils.println;
+import static java.lang.Integer.parseInt;
 
 public class AuthController implements IAuthController {
     private final HomeController homeController;
     private final AppController appController;
     private final LoginPage loginPage;
     private final RegisterPage registerPage;
+    public static int loggedInUserId;
 
     public AuthController(AppController appController){
         this.appController=appController;
@@ -40,7 +42,12 @@ public class AuthController implements IAuthController {
 
         User user= validateUser(email,password);
         if(user!=null){
-            homeController.printMenu();
+            if(user.getRole()==Role.ADMIN){
+                homeController.printAdminMenu();
+            }
+            else{
+                homeController.printMenu();
+            }
         }
         else {
             loginPage.invalidCredentials();
@@ -55,9 +62,10 @@ public class AuthController implements IAuthController {
                 String value=scanner.next().trim();
                 if(!value.startsWith("id")){
                     String[] userArray=value.split(",");
+                    loggedInUserId=parseInt(userArray[0]);
                     if(userArray[2].equals(email) && userArray[3].equals(password)){
                         User user=new User();
-                        user.setId(Integer.parseInt(userArray[0]));
+                        user.setId(parseInt(userArray[0]));
                         user.setName(userArray[1]);
                         user.setEmail(userArray[2]);
                         user.setPassword(userArray[3]);
@@ -78,6 +86,7 @@ public class AuthController implements IAuthController {
 
     @Override
     public void logout() {
+        loggedInUserId=0;
         authMenu();
     }
 

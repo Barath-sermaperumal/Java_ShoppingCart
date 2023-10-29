@@ -7,6 +7,7 @@ import com.codewithbubblu.utils.StringUtil;
 import com.codewithbubblu.view.HomePage;
 import com.codewithbubblu.view.WelcomePage;
 
+import static com.codewithbubblu.controller.AuthController.loggedInUserId;
 import static com.codewithbubblu.utils.AppInput.enterInt;
 import static com.codewithbubblu.utils.Utils.print;
 import static com.codewithbubblu.utils.Utils.println;
@@ -40,12 +41,36 @@ public class HomeController implements IHomeController {
                 } else if (choice==3) {
                     cartController.ShowCartProducts();
                 } else if (choice==4) {
-                    System.out.println("4");
+                    System.out.println("under construction");
                 } else if (choice==5) {
+                    loggedInUserId=0;
                     authController.authMenu();
                 } else {
                     invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
                 }
+        } catch (AppException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void printAdminMenu() {
+        homePage.printWelcome();
+        homePage.printAdminMenu();
+        try {
+            int choice=enterInt(StringUtil.ENTER_CHOICE);
+            if(choice==1){
+                categoriesController.adminCategoryFunctions();
+            } else if (choice==2) {
+                productController.adminProductFunctions();
+            } else if (choice==3) {
+                OrderController.adminOrderFunctions();
+            } else if (choice==4) {
+                loggedInUserId=0;
+                authController.authMenu();
+            } else {
+                invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
+            }
         } catch (AppException e) {
             throw new RuntimeException(e);
         }
