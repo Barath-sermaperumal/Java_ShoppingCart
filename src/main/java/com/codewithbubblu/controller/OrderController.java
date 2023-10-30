@@ -19,8 +19,8 @@ public class OrderController {
 
     public static void orderfun(){
         try {
-            Date date=new Date();
-            appendStrToOrdersFile("src/main/java/com/codewithbubblu/assets/orders.csv",String.valueOf(date.getDate()));
+            Date currentDate = new Date();
+            appendStrToOrdersFile("src/main/java/com/codewithbubblu/assets/orders.csv",String.valueOf(currentDate));
             Scanner scanner = new Scanner(getCartsFile());
             while (scanner.hasNext()) {
                 String value = scanner.next();
