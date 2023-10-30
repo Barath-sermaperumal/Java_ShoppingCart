@@ -1,9 +1,7 @@
 package com.codewithbubblu.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
 public class FileUtil {
     private static File credentialFile;
@@ -36,8 +34,8 @@ public class FileUtil {
     {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));
-            out.newLine();
             out.write(str);
+            out.newLine();
             out.close();
         }
         catch (IOException e) {
@@ -49,12 +47,58 @@ public class FileUtil {
     {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));
-            out.newLine();
             out.write(str);
+            out.newLine();
             out.close();
         }
         catch (IOException e) {
             System.out.println("exception occurred" + e);
         }
+    }
+
+    public static void appendStrToOrdersFile(String fileName, String str)
+    {
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));
+            out.write(str);
+            out.newLine();
+            out.close();
+        }
+        catch (IOException e) {
+            System.out.println("exception occurred" + e);
+        }
+    }
+
+    public static void replaceCartFile(String oldString, String newString) throws IOException {
+        String filePath = "src/main/java/com/codewithbubblu/assets/carts.csv";
+        Scanner sc = new Scanner(new File(filePath));
+        StringBuffer buffer = new StringBuffer();
+        while (sc.hasNextLine()) {
+            buffer.append(sc.nextLine()+System.lineSeparator());
+        }
+        String fileContents = buffer.toString();
+        System.out.println("Contents of the file: "+fileContents);
+        sc.close();
+        fileContents = fileContents.replaceAll(oldString, newString);
+        FileWriter writer = new FileWriter(filePath);
+        System.out.println("new data: "+fileContents);
+        writer.append(fileContents);
+        writer.flush();
+    }
+
+    public static void fileWritter(File s){
+        Scanner sc = null;
+        try {
+            sc = new Scanner(s);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        StringBuffer buffer = new StringBuffer();
+        while (sc.hasNextLine()) {
+            buffer.append(sc.nextLine()+System.lineSeparator());
+        }
+        String fileContents = buffer.toString();
+        System.out.println("Myfile: "+fileContents);
+        sc.close();
     }
 }

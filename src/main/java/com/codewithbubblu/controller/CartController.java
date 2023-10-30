@@ -1,8 +1,11 @@
 package com.codewithbubblu.controller;
 
 import com.codewithbubblu.controller.implementation.ICartController;
+import com.codewithbubblu.utils.AppException;
+import com.codewithbubblu.utils.FileUtil;
 import com.codewithbubblu.utils.StringUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,135 +17,40 @@ import static java.lang.Integer.parseInt;
 
 public class CartController implements ICartController {
     HomeController homeController;
-    public CartController(HomeController homeController){
-        this.homeController=homeController;
+    OrderController orderController;
+    public CartController(HomeController homeController) {
+        this.homeController = homeController;
+        orderController =new OrderController();
 
     }
     @Override
     public void addToCart(int categoryChoice) {
-        ArrayList<String> existingProduct=new ArrayList<>();
-        try{
-            Scanner scanner=new Scanner(getCartsFile());
-            while (scanner.hasNext()){
-                String value=scanner.next().trim();
-                String[] cartsArray=value.split(",");
-                if(loggedInUserId==parseInt(cartsArray[0])){
-                    System.out.println("Existing user");
-                    if(parseInt(cartsArray[1])==categoryChoice){
-                        System.out.println("Existing product");
-                        existingProduct.add(cartsArray[0]);
-                        existingProduct.add(cartsArray[1]);
-                        existingProduct.add(cartsArray[2]);
-                        existingProduct.add(cartsArray[3]);
-                        existingProduct.add(cartsArray[4]);
-                        existingProduct.add(cartsArray[5]);
-                        existingProduct.add(cartsArray[6]);
-                        int count=parseInt(cartsArray[7])+1;
-                        existingProduct.add(String.valueOf(count));
-                        String s=existingProduct.toString();
-                        s=s.replaceAll("\\[", "");
-                        s=s.replaceAll("\\]","");
-                        s=s.replaceAll("\\s", "");
-                        System.out.println(s);
-                        appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv",s);
-                        System.out.println(existingProduct);
-                        break;
-                    }
-                    else{
-                        System.out.println("new product");
-                        ArrayList<String> newProduct=pickProductArray(categoryChoice);
-                        String s=newProduct.toString();
-                        s=s.replaceAll("\\[", "");
-                        s=s.replaceAll("\\]","");
-                        s=s.replaceAll("\\s", "");
-                        System.out.println(s);
-                        appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv",s);
-                        break;
-                    }
-                }
-                else {
-                    System.out.println("new user");
-                    ArrayList<String> newProduct=pickProductArray(categoryChoice);
-                    String s=newProduct.toString();
-                    s=s.replaceAll("\\[", "");
-                    s=s.replaceAll("\\]","");
-                    s=s.replaceAll("\\s", "");
-                    System.out.println(s);
-                    appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv",s);
-                    System.out.println(pickProductArray(categoryChoice));
-                    break;
-                }
+        boolean isFound = false;
+        String[] proArr = new String[]{};
+        try {
+            Scanner scanner = new Scanner(getCartsFile());
+            while (scanner.hasNext()) {
+                String value = scanner.next().trim();
+                String[] cartsArray = value.split(",");
+                if (loggedInUserId == parseInt(cartsArray[0]) && categoryChoice ==parseInt(cartsArray[1])) {
+                    isFound = true;
+                    proArr=send(cartsArray);
+                } else {}
             }
+            addToCartTry(isFound,categoryChoice,proArr);
             scanner.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-//        ArrayList<String> newProduct=new ArrayList<>();
-//        try{
-//            Scanner productScanner=new Scanner(getProductsFile());
-//            Scanner cartScanner=new Scanner(getCartsFile());
-//            while (productScanner.hasNext()||cartScanner.hasNext()){
-//                String productValue=productScanner.next().trim();
-//                String cartValue=cartScanner.next().trim();
-//                String[] productsArray=productValue.split(",");
-//                String[] cartsArray=cartValue.split(",");
-//                System.out.println(loggedInUserId);
-//                System.out.println(cartsArray[0]);
-//                if(loggedInUserId==parseInt(cartsArray[0])){
-//                    if(categoryChoice==parseInt(cartsArray[1])){
-////                        newProduct.add(cartsArray[0]);
-////                        newProduct.add(cartsArray[1]);
-////                        newProduct.add(cartsArray[2]);
-////                        newProduct.add(cartsArray[3]);
-////                        newProduct.add(cartsArray[4]);
-////                        newProduct.add(cartsArray[5]);
-////                        newProduct.add(cartsArray[6]);
-////                        newProduct.add(String.valueOf(parseInt(cartsArray[7])+1));
-////                        System.out.println(newProduct);
-////                        break;
-//                    }
-//                    else{
-////                        newProduct.add(String.valueOf(loggedInUserId));
-////                        newProduct.add(productsArray[0]);
-////                        newProduct.add(productsArray[1]);
-////                        newProduct.add(productsArray[2]);
-////                        newProduct.add(productsArray[3]);
-////                        newProduct.add(productsArray[4]);
-////                        newProduct.add(productsArray[5]);
-////                        newProduct.add("1");
-////                        System.out.println(newProduct);
-////                        break;
-//                    }
-//                }
-//                else {
-////                    newProduct.add(String.valueOf(loggedInUserId));
-////                    newProduct.add(productsArray[0]);
-////                    newProduct.add(productsArray[1]);
-////                    newProduct.add(productsArray[2]);
-////                    newProduct.add(productsArray[3]);
-////                    newProduct.add(productsArray[4]);
-////                    newProduct.add(productsArray[5]);
-////                    newProduct.add("1");
-////                    System.out.println(newProduct);
-////                    break;
-//                }
-//            }
-//            productScanner.close();
-//        }
-//        catch (Exception e){
-//            System.out.println(e);
-//        }
     }
-
     private ArrayList<String> pickProductArray(int categoryChoice) {
-        ArrayList<String> newProduct=new ArrayList<>(){};
-        try{
-            Scanner scanner=new Scanner(getProductsFile());
-            while (scanner.hasNext()){
-                String value=scanner.next().trim();
-                String[] productsArray=value.split(",");
-                if(parseInt(productsArray[0])==categoryChoice){
+        ArrayList<String> newProduct = new ArrayList<>();
+        try {
+            Scanner scanner = new Scanner(getProductsFile());
+            while (scanner.hasNext()) {
+                String value = scanner.next().trim();
+                String[] productsArray = value.split(",");
+                if (parseInt(productsArray[0]) == categoryChoice) {
                     newProduct.add(String.valueOf(loggedInUserId));
                     newProduct.add(productsArray[0]);
                     newProduct.add(productsArray[1]);
@@ -155,38 +63,101 @@ public class CartController implements ICartController {
                 }
             }
             scanner.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
         return newProduct;
     }
-
-
     @Override
     public void ShowCartProducts() {
-        try{
-            Scanner scanner=new Scanner(getCartsFile());
-            while (scanner.hasNext()){
-                String value=scanner.next();
-                String[] cartsArray=value.split(",");
-                if(parseInt(cartsArray[0])==loggedInUserId) {
+        try {
+            Scanner scanner = new Scanner(getCartsFile());
+            while (scanner.hasNext()) {
+                String value = scanner.next();
+                String[] cartsArray = value.split(",");
+                if (parseInt(cartsArray[0]) == loggedInUserId) {
                     System.out.println(cartsArray[2] + "x" + cartsArray[7] + "=>" + parseInt(cartsArray[4]) * parseInt(cartsArray[7]));
                 }
             }
             println("1.checkOut");
             println("99.Back");
-            int choice=enterInt(StringUtil.ENTER_CHOICE);
-            if(choice==99){
+            int choice = enterInt(StringUtil.ENTER_CHOICE);
+            if (choice == 99) {
                 homeController.printMenu();
+            } else if(choice==1) {
+                orderController.orderfun();
             }
-            else {
-                System.out.println("under construction");
+            else{
+                homeController.invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
             }
             scanner.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
+    }
+    public void addToCartTry(boolean isFound,int categoryChoice,String[] proArr){
+        ArrayList<String> existingProduct = new ArrayList<>();
+        ArrayList<String> oldProduct = new ArrayList<>();
+        if (isFound) {
+            System.out.println("Existing user");
+            System.out.println(proArr[1]+" "+categoryChoice);
+            if (parseInt(proArr[1]) == categoryChoice) {
+                System.out.println("Existing product");
+                FileUtil.fileWritter(getCartsFile());
+                oldProduct.add(proArr[0]);
+                oldProduct.add(proArr[1]);
+                oldProduct.add(proArr[2]);
+                oldProduct.add(proArr[3]);
+                oldProduct.add(proArr[4]);
+                oldProduct.add(proArr[5]);
+                oldProduct.add(proArr[6]);
+                oldProduct.add(proArr[7]);
+                existingProduct.add(proArr[0]);
+                existingProduct.add(proArr[1]);
+                existingProduct.add(proArr[2]);
+                existingProduct.add(proArr[3]);
+                existingProduct.add(proArr[4]);
+                existingProduct.add(proArr[5]);
+                existingProduct.add(proArr[6]);
+                int count = parseInt(proArr[7]) + 1;
+                existingProduct.add(String.valueOf(count));
+                String newString = existingProduct.toString();
+                String oldString = oldProduct.toString();
+                newString = newString.replaceAll("\\[", "");
+                newString = newString.replaceAll("\\]", "");
+                newString = newString.replaceAll("\\s", "");
+                oldString = oldString.replaceAll("\\[", "");
+                oldString = oldString.replaceAll("\\]", "");
+                oldString = oldString.replaceAll("\\s", "");
+                try {
+                    FileUtil.fileWritter(getCartsFile());
+                    FileUtil.replaceCartFile(oldString,newString);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("new product");
+                FileUtil.fileWritter(getCartsFile());
+                ArrayList<String> newProduct = pickProductArray(categoryChoice);
+                String s = newProduct.toString();
+                s = s.replaceAll("\\[", "");
+                s = s.replaceAll("\\]", "");
+                s = s.replaceAll("\\s", "");
+                appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv", s);
+            }
+        }
+        else {
+            System.out.println("new user");
+            FileUtil.fileWritter(getCartsFile());
+            ArrayList<String> newProduct = pickProductArray(categoryChoice);
+            String s = newProduct.toString();
+            s = s.replaceAll("\\[", "");
+            s = s.replaceAll("\\]", "");
+            s = s.replaceAll("\\s", "");
+            appendStrTocartFile("src/main/java/com/codewithbubblu/assets/carts.csv", s);
+        }
+    }
+    public String[] send(String[] arr){
+        return arr;
     }
 }
