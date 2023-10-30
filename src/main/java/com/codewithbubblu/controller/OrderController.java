@@ -3,6 +3,7 @@ package com.codewithbubblu.controller;
 import com.codewithbubblu.utils.AppException;
 import com.codewithbubblu.utils.StringUtil;
 
+import java.util.Date;
 import java.util.Scanner;
 
 import static com.codewithbubblu.controller.AuthController.loggedInUserId;
@@ -18,11 +19,14 @@ public class OrderController {
 
     public static void orderfun(){
         try {
+            Date date=new Date();
+            appendStrToOrdersFile("src/main/java/com/codewithbubblu/assets/orders.csv",String.valueOf(date.getDate()));
             Scanner scanner = new Scanner(getCartsFile());
             while (scanner.hasNext()) {
                 String value = scanner.next();
                 String[] cartsArray = value.split(",");
                 if (parseInt(cartsArray[0]) == loggedInUserId) {
+
                    appendStrToOrdersFile("src/main/java/com/codewithbubblu/assets/orders.csv",value);
                    replaceCartFile(value,"");
                 }
