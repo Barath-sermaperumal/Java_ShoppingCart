@@ -19,12 +19,14 @@ public class HomeController implements IHomeController {
     CategoriesController categoriesController;
     ProductController productController;
     CartController cartController;
+    OrderController orderController;
     public HomeController(AuthController authController){
         homePage=new HomePage();
         this.authController=authController;
         categoriesController=new CategoriesController(this);
         productController=new ProductController(this);
         cartController=new CartController(this);
+        orderController=new OrderController(this);
     }
     @Override
     public void printMenu() {

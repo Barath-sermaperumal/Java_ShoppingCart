@@ -43,7 +43,20 @@ public class FileUtil {
         }
     }
 
-    public static void appendStrToproductFile(String fileName, String str)
+    public static void appendStrToProductFile(String fileName, String str)
+    {
+        try {
+            BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));
+            out.write(str);
+            out.newLine();
+            out.close();
+        }
+        catch (IOException e) {
+            System.out.println("exception occurred" + e);
+        }
+    }
+
+    public static void appendStrToCategoriesFile(String fileName, String str)
     {
         try {
             BufferedWriter out = new BufferedWriter(new FileWriter(fileName, true));

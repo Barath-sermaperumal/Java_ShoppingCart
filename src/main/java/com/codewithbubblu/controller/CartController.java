@@ -20,7 +20,7 @@ public class CartController implements ICartController {
     OrderController orderController;
     public CartController(HomeController homeController) {
         this.homeController = homeController;
-        orderController =new OrderController();
+        orderController =new OrderController(homeController);
 
     }
     @Override

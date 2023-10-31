@@ -1,17 +1,18 @@
 package com.codewithbubblu.controller;
 
+import com.codewithbubblu.controller.implementation.IProductController;
+import com.codewithbubblu.utils.AppException;
 import com.codewithbubblu.utils.StringUtil;
 
 import java.util.Scanner;
 
 import static com.codewithbubblu.utils.AppInput.enterInt;
-import static com.codewithbubblu.utils.FileUtil.getCategoriesFile;
-import static com.codewithbubblu.utils.FileUtil.getProductsFile;
+import static com.codewithbubblu.utils.FileUtil.*;
 import static com.codewithbubblu.utils.Utils.print;
 import static com.codewithbubblu.utils.Utils.println;
 import static java.lang.Integer.parseInt;
 
-public class ProductController {
+public class ProductController implements IProductController {
     HomeController homeController;
     CartController cartController;
     public ProductController(HomeController homeController){
@@ -45,6 +46,53 @@ public class ProductController {
 
     public void adminProductFunctions() {
         println(StringUtil.ENTER_ADMIN_PRODUCTS_CHOICES);
+        try {
+            int adminProductChoices=enterInt(StringUtil.ENTER_ADMIN_PRODUCTS_CHOICES);
+            if(adminProductChoices==99){
+                adminProductFunctions();
+            }
+            else {
+                if (adminProductChoices==1){
+                    showProducts();
+                } else if (adminProductChoices==2) {
+                    addProducts();
+                } else if (adminProductChoices==3) {
+                    int choice=enterInt(StringUtil.ENTER_CHOICE);
+                    deleteProducts(choice);
+                } else if (adminProductChoices==4){
+                    editProducts();
+                }
+                else {
+                    homeController.invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
+                }
+            }
+        } catch (AppException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void editProducts() {
+    }
+
+    private void deleteProducts(int productDeleteChoice) {
+        try {
+            Scanner scanner = new Scanner(getProductsFile());
+            while (scanner.hasNext()) {
+                String value = scanner.next().trim();
+                String[] productArray = value.split(",");
+                if(parseInt(productArray[0])==productDeleteChoice){
+                    replaceCartFile(value,"");
+                }
+            }
+            scanner.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void addProducts() {
+
     }
 
     public void showSelectedProducts(int id){

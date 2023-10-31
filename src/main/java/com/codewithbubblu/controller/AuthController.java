@@ -27,29 +27,27 @@ public class AuthController implements IAuthController {
     private final RegisterPage registerPage;
     public static int loggedInUserId;
 
-    public AuthController(AppController appController){
-        this.appController=appController;
-        homeController=new HomeController(this);
-        loginPage=new LoginPage();
-        registerPage=new RegisterPage();
+    public AuthController(AppController appController) {
+        this.appController = appController;
+        homeController = new HomeController(this);
+        loginPage = new LoginPage();
+        registerPage = new RegisterPage();
     }
 
     @Override
     public void login() {
-        String email,password;
-        email=enterString(StringUtil.ENTER_EMAIL);
-        password=enterString(StringUtil.ENTER_PASSWORD);
+        String email, password;
+        email = enterString(StringUtil.ENTER_EMAIL);
+        password = enterString(StringUtil.ENTER_PASSWORD);
 
-        User user= validateUser(email,password);
-        if(user!=null){
-            if(user.getRole()==Role.ADMIN){
+        User user = validateUser(email, password);
+        if (user != null) {
+            if (user.getRole() == Role.ADMIN) {
                 homeController.printAdminMenu();
-            }
-            else{
+            } else {
                 homeController.printMenu();
             }
-        }
-        else {
+        } else {
             loginPage.invalidCredentials();
             authMenu();
         }
@@ -57,19 +55,19 @@ public class AuthController implements IAuthController {
 
     private User validateUser(String email, String password) {
         try {
-            Scanner scanner=new Scanner(getCredentialFile());
-            while (scanner.hasNext()){
-                String value=scanner.next().trim();
-                if(!value.startsWith("id")){
-                    String[] userArray=value.split(",");
-                    loggedInUserId=parseInt(userArray[0]);
-                    if(userArray[2].equals(email) && userArray[3].equals(password)){
-                        User user=new User();
+            Scanner scanner = new Scanner(getCredentialFile());
+            while (scanner.hasNext()) {
+                String value = scanner.next().trim();
+                if (!value.startsWith("id")) {
+                    String[] userArray = value.split(",");
+                    loggedInUserId = parseInt(userArray[0]);
+                    if (userArray[2].equals(email) && userArray[3].equals(password)) {
+                        User user = new User();
                         user.setId(parseInt(userArray[0]));
                         user.setName(userArray[1]);
                         user.setEmail(userArray[2]);
                         user.setPassword(userArray[3]);
-                        if(user.getEmail().equals("admin@gmail.com"))
+                        if (user.getEmail().equals("admin@gmail.com"))
                             user.setRole(Role.ADMIN);
                         else
                             user.setRole(Role.USER);
@@ -86,33 +84,31 @@ public class AuthController implements IAuthController {
 
     @Override
     public void logout() {
-        loggedInUserId=0;
+        loggedInUserId = 0;
         authMenu();
     }
 
     @Override
     public void register() {
-        String name,email,password,c_password;
-        name=enterString(StringUtil.ENTER_NAME);
-        email=enterString(StringUtil.ENTER_EMAIL);
-        password=enterString(StringUtil.ENTER_PASSWORD);
-        c_password=enterString(StringUtil.ENTER_PASSWORD_AGAIN);
+        String name, email, password, c_password;
+        name = enterString(StringUtil.ENTER_NAME);
+        email = enterString(StringUtil.ENTER_EMAIL);
+        password = enterString(StringUtil.ENTER_PASSWORD);
+        c_password = enterString(StringUtil.ENTER_PASSWORD_AGAIN);
 
-        if(password.equals(c_password)){
-            try{
-                FileWriter csvWritter=new FileWriter(getCredentialFile(),true);
-                int id=(int)(Math.random()*100);
+        if (password.equals(c_password)) {
+            try {
+                FileWriter csvWritter = new FileWriter(getCredentialFile(), true);
+                int id = (int) (Math.random() * 100);
                 csvWritter.append("\n");
-                csvWritter.append(id+","+name+","+email+","+password);
+                csvWritter.append(id + "," + name + "," + email + "," + password);
                 csvWritter.flush();
                 csvWritter.close();
                 registerPage.printRegistrationSuccessful();
-            }
-            catch (IOException e){
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-        else {
+        } else {
             registerPage.passwordMisMatch();
         }
         authMenu();
@@ -122,23 +118,21 @@ public class AuthController implements IAuthController {
     public void authMenu() {
         appController.printAuthMenu();
         int choice;
-        try{
-           choice=enterInt(StringUtil.ENTER_CHOICE);
-           if(choice==1){
-               login();
-           } else if (choice==2) {
-               register();
-           }
-           else {
-               invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
-           }
-        }
-        catch (AppException appException){
+        try {
+            choice = enterInt(StringUtil.ENTER_CHOICE);
+            if (choice == 1) {
+                login();
+            } else if (choice == 2) {
+                register();
+            } else {
+                invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
+            }
+        } catch (AppException appException) {
             invalidChoice(appException);
         }
     }
 
-    private void invalidChoice(AppException e){
+    private void invalidChoice(AppException e) {
         println(e.toString());
         authMenu();
     }

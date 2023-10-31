@@ -13,8 +13,34 @@ import static com.codewithbubblu.utils.Utils.println;
 import static java.lang.Integer.parseInt;
 
 public class OrderController {
+    static HomeController homeController;
+
+    public OrderController(HomeController homeController){
+        this.homeController=homeController;
+    }
     public static void adminOrderFunctions() {
         println(StringUtil.ENTER_ADMIN_ORDERS_CHOICES);
+        try {
+            int adminOrdersChoice=enterInt(StringUtil.ENTER_ADMIN_ORDERS_CHOICES);
+            if(adminOrdersChoice==99){
+                adminOrderFunctions();
+            }
+            else {
+                if (adminOrdersChoice==1){
+                    showOrders();
+                }
+                else {
+                    homeController.invalidChoice(new AppException(StringUtil.INVALID_CHOICE));
+                }
+            }
+        } catch (AppException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private static void showOrders() {
+
     }
 
     public static void orderfun(){
@@ -26,7 +52,6 @@ public class OrderController {
                 String value = scanner.next();
                 String[] cartsArray = value.split(",");
                 if (parseInt(cartsArray[0]) == loggedInUserId) {
-
                    appendStrToOrdersFile("src/main/java/com/codewithbubblu/assets/orders.csv",value);
                    replaceCartFile(value,"");
                 }
